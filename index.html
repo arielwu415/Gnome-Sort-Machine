@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--<link rel="stylesheet" href="index.css">-->
+    <title>Gnome Sort</title>
+  </head>
+
+  <body>
+
+    <h1>This is a Gnome Sorting Machine</h1>
+    <div class="main">
+      <div class="main_container">
+        <div class="content">
+
+          <span class="input_area">
+            Enter numbers you would like to sort separated by white space:
+            <input type="text" placeholder="ex: 3 4 1 2" id="input" name="input" min="2" style="margin-top: 5px;">
+            <button onclick="startSorting()">Enter</button>
+          </span>
+
+          <div class="result">
+            <div id="steps"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+
+      /* This function is called when the click event is triggered,
+       * used to display the user input as an array and call the gnomeSort
+       */
+      function startSorting()
+      {
+        var originalArr = getArray()                // get array numbers from user input
+        var resultHtml = ""                         // declare empty object as a string
+        resultHtml += "<span>Your original array is:</span><br>" 
+                    + makeArrayHTML(originalArr)  // turn input numbers into html
+
+        // change the output html code to display original array
+        changeHTML(resultHtml)
+        // start sorting                   
+        gnomeSort(originalArr, resultHtml)
+      }
+
+
+
+      /* Sorting function that does inplace sorting in the given array and
+       * print out steps of swapping elements
+       */
+      function gnomeSort(arr, HTMLstr)
+      {
+        var stepStr = HTMLstr
+        var pos = 1
+        var count = 1
+        stepStr += "<span> Pivot is originally at position " + pos + "</span>"
+
+        stepStr += "<div class=\"all_steps\">"
+        while(pos < arr.length)
+        {
+          stepStr += "<div class=\"step_container\">" + "<span class=\"step\"><strong>Step" + count + "</strong></span>"
+
+          if(pos == 0 || arr[pos] >= arr[pos-1]) {
+            pos++
+            stepStr += (pos === arr.length)? "<span>Done!</span>" : "<span>Move pivot right to position " + pos + "</span>"
+          } 
+          else {
+            [arr[pos-1], arr[pos]] = [arr[pos], arr[pos-1]]
+            pos--
+            stepStr += "<span>Swap " + arr[pos] + " and " + arr[pos+1] + "</span>" +
+                      "<span>Move pivot left to position " + pos + "</span>"
+                        
+          }
+
+          // make current array in each step
+          stepStr += makeArrayHTML(arr) + "</div>" // end of class="step_container"
+          count++
+        }
+        stepStr += "</div>" // end of class="all_steps"
+        changeHTML(stepStr)
+      }
+
+
+      
+      /* This function will get user input string, make it an array 
+       * split by white space and turn it into an integer array.
+       */
+      function getArray()
+      {
+        var originalArr = document.getElementById("input").value.split(" ")
+        var intArr = originalArr.map(function (elem) {
+          return parseInt(elem, 10)
+        })       
+        return intArr
+      }
+
+
+
+      /* This function is used to create HTML <div> tag to display array
+       *
+       * <div class="arr_container">
+       *    <div id="arr_element">num1</div>
+       *    <div id="arr_element">num2</div>
+       *    <div id="arr_element">num3</div>
+       * </div>
+       * 
+       */
+      function makeArrayHTML(arr)
+      {
+          var displayArr = ""
+
+          displayArr += "<div class=\"arr_container\">"
+          for(let i = 0; i < arr.length; i++) {
+            displayArr += "<div id=\"arr_element\">" + arr[i] + "</div>"
+          }
+          displayArr += "</div>"
+
+          return displayArr
+      }
+
+
+      
+      /* This function will update the <div class="steps"> tag with given string
+       */
+      function changeHTML(str) {
+        document.getElementById("steps").innerHTML = str
+      }
+
+    </script>
+
+
+
+    <style type="text/css">
+      body
+      {
+        text-align: center;
+        align-items: center;
+        background: #94D1D3;
+        font-family: helvetica;
+      }
+
+      .content 
+      {
+        padding: 20px;
+      }
+
+      .result
+      {
+        width: 50%;
+        margin: auto;
+        margin-top: 10px;
+        align-items: center;
+      }
+
+      .all_steps
+      {
+        display: flex;
+        flex-direction: column;
+        margin-top: 8px;
+      }
+
+      .step_container
+      {
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: left;
+        margin: 8px 0;
+      }
+
+      .step_container span
+      {
+        margin: auto;
+      }
+
+      .step
+      {
+        text-align: left;
+      }
+
+      .arr_container
+      {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 5px;
+      }
+
+      #arr_element
+      {
+        width: 50px;
+        border:  1px solid black;
+        padding: 0 5px;
+      }
+
+    </style>
+
+  </body>
+
+</html>
